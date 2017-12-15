@@ -9,3 +9,9 @@
     name="<?php echo $show_parent_name ?>"<?php echo $show_parent_checked ?>>
   <label for="<?php echo $show_parent_id ?>">Show parent page in list</label>
 <p>
+
+<p>
+  <label for="<?php echo $override_list_id ?>">Override with pages:</label>
+  <input type="text" class="widefat" id="<?php echo $override_list_id ?>"
+    name="<?php echo $override_list_name ?>" value="<?php echo $override_list ?>">
+</p>

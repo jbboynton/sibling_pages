@@ -12,8 +12,8 @@ class Helpers {
   }
 
   public static function build_sidebar_link($post) {
-    $name = $post->post_title;
-    $url = get_permalink($post->ID);
+    $name = $post['title'];
+    $url = $post['url'];
 
     return "<a href=\"$url\">$name</a>";
   }
