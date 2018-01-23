@@ -8,6 +8,7 @@ class PageList {
 
   private $origin;
   private $include_apex = false;
+  private $is_apex;
   private $override_ids = null;
 
   public function __construct($list_options) {
@@ -33,12 +34,17 @@ class PageList {
   }
 
   private function find_origin($options) {
-    $post = $origin = get_post(get_the_ID());
+    $post_id = $origin = get_the_ID();
+    $post = get_post($post_id);
 
     if ($post->post_parent) {
-      $ancestors = get_post_ancestors($post->ID);
+      $this->is_apex = false;
+
+      $ancestors = get_post_ancestors($post);
       $origin_index = count($ancestors) - 1;
       $origin = $ancestors[$origin_index];
+    } else {
+      $this->is_apex = true;
     }
 
     return $origin;
@@ -96,9 +102,14 @@ class PageList {
 
   private function find_sibling_pages() {
     $args = array(
-      'parent' => $this->origin,
       'sort_column' => 'menu_order',
     );
+
+    if ($this->is_apex) {
+      $args['child_of'] = $this->origin;
+    } else {
+      $args['parent'] = $this->origin;
+    }
 
     $pages = get_pages($args);
 
