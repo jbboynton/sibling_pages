@@ -43,7 +43,9 @@ class SiblingPages extends \WP_Widget {
 
     $show_parent_id = esc_attr($this->get_field_id('show_parent'));
     $show_parent_name = esc_attr($this->get_field_name('show_parent'));
-    $show_parent_checked = $instance['show_parent'] ? "checked" : "";
+
+    $show_parent = $instance['show_parent'] ?? "";
+    $show_parent_checked = $show_parent ? "checked" : "";
 
     $override_list = $this->maybe($instance, 'override_list');
     $override_list_id = esc_attr($this->get_field_id('override_list'));
@@ -141,12 +143,14 @@ class SiblingPages extends \WP_Widget {
     return ($valid_post || $valid_archive);
   }
 
+  // Correct syntax is: 'archive:<post type>'. No space before or after the
+  // colon is allowed.
   private function valid_archive($post_id) {
-    // Valid archives must be prefixed with 'archive:'
     $prefix_pattern = '/^archive:(.*)/';
     preg_match($prefix_pattern, $post_id, $matches);
+    $match = $matches[1] ?? '';
 
-    return(is_post_type_archive($matches[1]) ? true : false);
+    return(is_post_type_archive($match ? true : false));
   }
 
 }
